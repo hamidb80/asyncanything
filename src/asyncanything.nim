@@ -12,10 +12,4 @@ template goAsync*(body: untyped, timeout = fakeAsyncTimeout): untyped =
     ^f
 
 template `|>`*(body: untyped, timeout = fakeAsyncTimeout): untyped =
-  block:
-    var f = spawn body
-
-    while not isReady f:
-      await sleepAsync timeout
-
-    ^f
+  goAsync body, timeout
