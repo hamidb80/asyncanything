@@ -1,8 +1,8 @@
 # Package
 
-version       = "0.0.1"
+version       = "0.0.2"
 author        = "hamidb80"
-description   = "make anything async [to be honest, fake async]"
+description   = "make anything async | always go async"
 license       = "MIT"
 srcDir        = "src"
 

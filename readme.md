@@ -12,7 +12,9 @@ with this small library you can pass it to another thread and fake it as a async
 
 
 ```nim
-let b = |> AssumeItsHugeAmountOfWork()
+let b = |> AssumeItsHugeAmountOfWork() 
+# or
+let b = goAsync AssumeItsHugeAmountOfWork()
 ```
 
 the idea is that you pass it to another thread and you check it every `timeout` milliseconds.
@@ -20,6 +22,8 @@ you can pass the `timeout` like this:
 
 ```nim
 let b = AssumeItsHugeAmountOfWork() |> 100
+# or
+let b = goAsync(AssumeItsHugeAmountOfWork(), 100)
 ```
 
 but by default it's value is `fakeAsyncTimeout` which is `100`.
