@@ -1,13 +1,18 @@
-import asyncdispatch, os
+import asyncdispatch, os, unittest
 import asyncanything
 
 proc getUserName(id: int): string =
   sleep 1000
   "hamid"
 
-proc main {.async.} =
-  let res = getUserName(12) |> 100
-  echo res
+proc getReturn: Future[string] {.async.} =
+  result = getUserName(12) |> 10
 
-when isMainModule:
-  waitFor main()
+proc longTask {.async.} =
+  sleep(150) |> 100
+
+test "with return":
+  check (waitFor getReturn()) == "hamid"
+
+test "without return":
+  waitFor longTask()

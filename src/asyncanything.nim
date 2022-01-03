@@ -1,9 +1,13 @@
 import asyncdispatch, threadpool
 
-const fakeAsyncTimeout {.intdefine.} : int = 100
+const
+  goAsyncTimeInterval {.intdefine.}: int = 100
+  # TODO goAsyncTimeout {.intdefine.}: int = 5000
 
-template goAsync*(body: untyped, timeout = fakeAsyncTimeout): untyped =
-  block:
+template goAsync*(body: typed, timeout = goAsyncTimeInterval): untyped =
+  const returnsSomething = typeof(body) isnot void
+
+  when returnsSomething:
     var f = spawn body
 
     while not isReady f:
@@ -11,5 +15,9 @@ template goAsync*(body: untyped, timeout = fakeAsyncTimeout): untyped =
 
     ^f
 
-template `|>`*(body: untyped, timeout = fakeAsyncTimeout): untyped =
+  else:
+    let p = proc(): bool = body
+    discard goAsync p()
+
+template `|>`*(body: untyped, timeout = goAsyncTimeInterval): untyped =
   goAsync body, timeout
