@@ -18,7 +18,7 @@ template goAsync*(body: typed, timeout = goAsyncTimeInterval): untyped =
     let p = proc() = body
     createThread(t, p)
 
-    while not running t:
+    while running t:
       await sleepAsync timeout
 
 
