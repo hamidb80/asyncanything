@@ -1,8 +1,6 @@
 import asyncdispatch, threadpool
 
-const
-  goAsyncTimeInterval {.intdefine.}: int = 100
-  # TODO goAsyncTimeout {.intdefine.}: int = 5000
+const goAsyncTimeInterval {.intdefine.}: int = 100
 
 template goAsync*(body: typed, timeout = goAsyncTimeInterval): untyped =
   const returnsSomething = typeof(body) isnot void
@@ -16,8 +14,13 @@ template goAsync*(body: typed, timeout = goAsyncTimeInterval): untyped =
     ^f
 
   else:
-    let p = proc(): bool = body
-    discard goAsync p()
+    var t: Thread[void]
+    let p = proc() = body
+    createThread(t, p)
 
-template `|>`*(body: untyped, timeout = goAsyncTimeInterval): untyped =
-  goAsync body, timeout
+    while not running t:
+      await sleepAsync timeout
+
+
+template `|>`*(body: untyped): untyped =
+  goAsync body

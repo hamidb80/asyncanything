@@ -1,15 +1,17 @@
-import asyncdispatch, os, unittest
+import std/[unittest, os, asyncdispatch]
 import asyncanything
 
+
 proc getUserName(id: int): string =
-  sleep 1000
+  sleep 100
   "hamid"
 
 proc getReturn: Future[string] {.async.} =
-  result = getUserName(12) |> 10
+  result = goAsync getUserName(12)
 
 proc longTask {.async.} =
-  sleep(150) |> 100
+  goAsync sleep(150)
+
 
 test "with return":
   check (waitFor getReturn()) == "hamid"
