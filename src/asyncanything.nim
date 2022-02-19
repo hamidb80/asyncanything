@@ -2,11 +2,11 @@ import asyncdispatch, threadpool
 
 const goAsyncTimeInterval {.intdefine.}: int = 100
 
-template goAsync*(body: typed, timeout = goAsyncTimeInterval): untyped =
-  const returnsSomething = typeof(body) isnot void
+template goAsync*(call: typed, timeout = goAsyncTimeInterval): untyped =
+  const returnsSomething = typeof(call) isnot void
 
   when returnsSomething:
-    var f = spawn body
+    var f = spawn call
 
     while not isReady f:
       await sleepAsync timeout
@@ -15,12 +15,12 @@ template goAsync*(body: typed, timeout = goAsyncTimeInterval): untyped =
 
   else:
     var t: Thread[void]
-    let p = proc() = body
+    let p = proc() = call
     createThread(t, p)
 
     while running t:
       await sleepAsync timeout
 
 
-template `|>`*(body: untyped): untyped =
-  goAsync body
+template `|>`*(call: untyped): untyped =
+  goAsync call

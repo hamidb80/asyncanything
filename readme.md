@@ -26,3 +26,6 @@ let b = goAsync(AssumeItsHugeAmountOfWork(), 100)
 
 but by default it's value is `fakeAsyncTimeout` which is `100`.
 you can also change it's value at the compile time with `-d:fakeAsyncTimeout=<N>` to your ideal timeout [ here `<N>` is an integer ]
+
+## limitations
+there are some limitation when you want to run a non-return closure `proc`.

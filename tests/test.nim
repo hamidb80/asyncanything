@@ -10,11 +10,31 @@ proc getReturn: Future[string] {.async.} =
   result = goAsync getUserName(12)
 
 proc longTask {.async.} =
-  goAsync sleep(150)
+  goAsync sleep 150
+  echo "am I echoed?"
+
+# proc closureProcNoReturn {.async.} =
+#   var a: int
+#   proc job() = a = 128
+#   goAsync job()
+
+# proc closureProc: Future[bool] {.async.} =
+#   var a: int
+#   proc job() = a = 128
+#   goAsync job()
 
 
-test "with return":
-  check (waitFor getReturn()) == "hamid"
+suite "with return":
+  test "nimcall":
+    check (waitFor getReturn()) == "hamid"
 
-test "without return":
-  waitFor longTask()
+  # test "closure":
+  #   check (waitFor closureProc()) == false
+
+
+suite "without return":
+  test "nimcall":
+    waitFor longTask()
+
+  # test "closure":
+  #   waitFor closureProcNoReturn()
